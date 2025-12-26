@@ -34,13 +34,21 @@
         .user-info span { font-weight: bold; }
         .close-btn { font-size: 30px; cursor: pointer; }
         .side-menu-links a { padding: 15px 20px; text-decoration: none; font-size: 16px; color: #333; display: block; border-bottom: 1px solid #f0f0f0; }
-        .side-menu-links .category-divider { margin: 10px 20px; border-top: 2px solid var(--daraz-orange); } /* নতুন স্টাইল */
+        .side-menu-links .category-divider { margin: 10px 20px; border-top: 2px solid var(--daraz-orange); }
         .btn { width: 100%; padding: 12px; background: var(--daraz-orange); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; }
         .btn-danger { background-color: var(--danger-red); margin-top: 10px; }
         .auth-page p { margin-top: 20px; font-size: 14px; }
         .auth-page .link-like { color: var(--daraz-orange); text-decoration: none; font-weight: bold; cursor: pointer; }
         .page-header { padding: 20px; background: #fff; text-align: center; margin-bottom: 10px; }
-        .swiper-container { width: 100%; height: auto; aspect-ratio: 16 / 9; margin: 10px 0; }
+        
+        .swiper-container { 
+            width: 100%; 
+            height: auto; 
+            aspect-ratio: 16 / 9; 
+            margin: 10px 0;
+            position: relative;
+        }
+
         .swiper-slide { overflow: hidden; }
         .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
         .swiper-pagination-bullet-active { background: var(--daraz-orange); }
@@ -79,19 +87,19 @@
         footer {
             background-color: #2E7D32;
             color: white;
-            padding: 20px;
+            padding: 250px 20px 50px; /* উপরের প্যাডিং আরও বাড়ানো হয়েছে */
             text-align: center;
             margin-top: 20px;
         }
         .footer-socials { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
         .footer-socials a img { width: 28px; height: 28px; transition: transform 0.2s; }
         .footer-socials a:hover img { transform: scale(1.15); }
-        .footer-contact-item { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; font-size: 16px; text-decoration: none; color: white; }
-        .footer-contact-item img { width: 24px; height: 24px; }
+
+        .footer-contact-item { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 15px; font-size: 18px; text-decoration: none; color: white; font-weight: 500;}
+        .footer-contact-item img { width: 28px; height: 28px; }
     </style>
 </head>
 <body>
-
     <div id="splash-screen">
         <div class="logo">
             <span id="splashSiteName"></span>
@@ -133,7 +141,7 @@
                 <a href="javascript:void(0);" onclick="showPage('orderHistoryPage')">আমার অর্ডার</a>
                 <a href="javascript:void(0);" onclick="showPage('profilePage')">প্রোফাইল</a>
                 <a href="javascript:void(0);" id="logoutButton" onclick="logoutUser()">লগআউট</a>
-                <!-- ক্যাটাগরি লিংকগুলো এখানে ডাইনামিকভাবে যোগ হবে -->
+                <!-- Category links will be dynamically added here -->
             </div>
         </div>
         <header>
@@ -166,11 +174,11 @@
                 </div>
             </div>
 
-            <!-- নতুন ক্যাটাগরি পেজ এখানে যোগ করা হয়েছে -->
+            <!-- New category page -->
             <div id="categoryProductsPage" class="page">
                 <div class="page-header"><h2 id="category-page-title"></h2></div>
                 <div id="category-products-grid" class="products-grid">
-                    <!-- ক্যাটাগরির প্রোডাক্ট এখানে দেখানো হবে -->
+                    <!-- Products of the category will be shown here -->
                 </div>
             </div>
         </div>
@@ -207,7 +215,7 @@
         const db = firebase.firestore();
         let currentUser = null, currentUserData = {};
         let newProfilePicFile = null;
-        let allProducts = []; // সব প্রোডাক্ট এখানে স্টোর করা হবে
+        let allProducts = [];
 
         const authContainer = document.getElementById('auth-container');
         const mainContainer = document.querySelector('.main-container');
@@ -218,7 +226,6 @@
             toggleMenu(false);
         }
 
-        // --- পুরোনো সব ফাংশন এখানে অপরিবর্তিত থাকবে ---
         function showAuthPage(pageId) { document.querySelectorAll('#auth-container .page').forEach(p => p.classList.remove('active')); document.getElementById(pageId).classList.add('active'); }
         function toggleMenu(forceState) { document.getElementById('sideMenu').style.width = forceState ? "280px" : "0"; }
         auth.onAuthStateChanged(user => { currentUser = user; if (user) { authContainer.style.display = 'none'; mainContainer.style.visibility = 'visible'; mainContainer.style.opacity = '1'; showPage('homePage'); db.collection('users').doc(user.uid).onSnapshot(doc => { currentUserData = doc.data() || {}; updateUserProfileUI(user, currentUserData); }); loadOrderHistory(); } else { authContainer.style.display = 'block'; mainContainer.style.visibility = 'hidden'; mainContainer.style.opacity = '0'; showAuthPage('loginPage'); } });
@@ -233,7 +240,29 @@
         function deleteUserAccount() { if (!currentUser) return; if (confirm("আপনি কি নিশ্চিত? আপনার অ্যাকাউন্ট স্থায়ীভাবে মুছে ফেলা হবে।")) { db.collection('users').doc(currentUser.uid).delete().then(() => currentUser.delete()).catch(err => { if (err.code === 'auth/requires-recent-login') { alert("নিরাপত্তার জন্য, আবার লগইন করে চেষ্টা করুন।"); logoutUser(); } else { alert("অ্যাকাউন্ট ডিলিট করার সময় একটি সমস্যা হয়েছে।"); } }); } }
         function toggleOrderModal(show, product = {}) { const orderModal = document.getElementById('orderModal'); if (show) { if (!currentUser) { alert("অর্ডার করার জন্য অনুগ্রহ করে লগইন করুন।"); showAuthPage('loginPage'); return; } document.getElementById('productId').value = product.id; document.getElementById('modalProductName').innerText = product.name; document.getElementById('customerName').value = currentUserData.displayName || ''; document.getElementById('customerPhone').value = currentUserData.phone || ''; orderModal.style.display = 'block'; } else { orderModal.style.display = 'none'; } }
         document.getElementById('orderForm').addEventListener('submit', e => { e.preventDefault(); db.collection('orders').add({ productId: document.getElementById('productId').value, productName: document.getElementById('modalProductName').innerText, userId: currentUser.uid, customerName: document.getElementById('customerName').value, customerAddress: document.getElementById('customerAddress').value, customerPhone: document.getElementById('customerPhone').value, status: 'Pending', orderDate: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { alert('অর্ডার সফলভাবে সম্পন্ন হয়েছে!'); toggleOrderModal(false); }); });
-        async function loadFooterInfo() { try { const doc = await db.collection('settings').doc('contactInfo').get(); const footer = document.getElementById('main-footer'); if (doc.exists) { const data = doc.data(); footer.innerHTML = ` <div class="footer-socials"> ${data.telegram && data.telegramIconUrl ? `<a href="${data.telegram}" target="_blank"><img src="${data.telegramIconUrl}" alt="Telegram"></a>` : ''} ${data.whatsapp && data.whatsappIconUrl ? `<a href="${data.whatsapp}" target="_blank"><img src="${data.whatsappIconUrl}" alt="WhatsApp"></a>` : ''} ${data.facebook && data.facebookIconUrl ? `<a href="${data.facebook}" target="_blank"><img src="${data.facebookIconUrl}" alt="Facebook"></a>` : ''} ${data.tiktok && data.tiktokIconUrl ? `<a href="${data.tiktok}" target="_blank"><img src="${data.tiktokIconUrl}" alt="TikTok"></a>` : ''} ${data.youtube && data.youtubeIconUrl ? `<a href="${data.youtube}" target="_blank"><img src="${data.youtubeIconUrl}" alt="YouTube"></a>` : ''} </div> ${data.phone && data.phoneIconUrl ? `<a href="tel:${data.phone}" class="footer-contact-item"><img src="${data.phoneIconUrl}" alt="Phone"><span>${data.phone}</span></a>` : ''} ${data.email && data.emailIconUrl ? `<a href="mailto:${data.email}" class="footer-contact-item"><img src="${data.emailIconUrl}" alt="Email"><span>${data.email}</span></a>` : ''} `; } } catch (error) { console.error("Error loading footer info: ", error); } }
+        
+        async function loadFooterInfo() { 
+            try { 
+                const doc = await db.collection('settings').doc('contactInfo').get(); 
+                const footer = document.getElementById('main-footer'); 
+                if (doc.exists) { 
+                    const data = doc.data(); 
+                    footer.innerHTML = ` 
+                        ${data.address ? `<p style="font-size: 16px; line-height: 1.5; margin: 0 0 30px; white-space: pre-line;">${data.address}</p>` : ''}
+                        ${data.phone && data.phoneIconUrl ? `<a href="tel:${data.phone}" class="footer-contact-item"><img src="${data.phoneIconUrl}" alt="Phone"><span>${data.phone}</span></a>` : ''}
+                        ${data.email && data.emailIconUrl ? `<a href="mailto:${data.email}" class="footer-contact-item"><img src="${data.emailIconUrl}" alt="Email"><span>${data.email}</span></a>` : ''} 
+                        <div class="footer-socials"> 
+                            ${data.telegram && data.telegramIconUrl ? `<a href="${data.telegram}" target="_blank"><img src="${data.telegramIconUrl}" alt="Telegram"></a>` : ''} 
+                            ${data.whatsapp && data.whatsappIconUrl ? `<a href="${data.whatsapp}" target="_blank"><img src="${data.whatsappIconUrl}" alt="WhatsApp"></a>` : ''} 
+                            ${data.facebook && data.facebookIconUrl ? `<a href="${data.facebook}" target="_blank"><img src="${data.facebookIconUrl}" alt="Facebook"></a>` : ''} 
+                            ${data.tiktok && data.tiktokIconUrl ? `<a href="${data.tiktok}" target="_blank"><img src="${data.tiktokIconUrl}" alt="TikTok"></a>` : ''} 
+                            ${data.youtube && data.youtubeIconUrl ? `<a href="${data.youtube}" target="_blank"><img src="${data.youtubeIconUrl}" alt="YouTube"></a>` : ''} 
+                        </div> 
+                    `; 
+                } 
+            } catch (error) { console.error("Error loading footer info: ", error); } 
+        }
+
         async function loadSiteSettings() { try { const settingsDoc = await db.collection('settings').doc('siteInfo').get(); if (settingsDoc.exists) { const settings = settingsDoc.data(); const siteName = settings.siteName || 'Daraz'; const logoUrl = settings.siteLogoUrl || ''; document.querySelectorAll('[id$="SiteName"]').forEach(el => el.innerText = siteName); document.querySelectorAll('[id$="Logo"]').forEach(el => el.src = logoUrl); } } catch (error) { console.error("Error loading site settings:", error); } }
         function loadOrderHistory() { if (!currentUser) return; db.collection('orders').where('userId', '==', currentUser.uid).orderBy('orderDate', 'desc').onSnapshot(snapshot => { const list = document.getElementById('order-history-list'); if (snapshot.empty) { list.innerHTML = "<p style='text-align:center;'>আপনার কোনো অর্ডার নেই।</p>"; return; } list.innerHTML = snapshot.docs.map(doc => { const order = doc.data(); const orderDate = order.orderDate ? new Date(order.orderDate.seconds * 1000).toLocaleDateString('bn-BD') : 'N/A'; return `<div class="list-item"><h4>${order.productName}</h4><p>অর্ডারের তারিখ: ${orderDate}</p><p class="status">স্ট্যাটাস: ${order.status}</p></div>`; }).join(''); }); }
         
@@ -241,7 +270,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             await loadSiteSettings();
             await loadFooterInfo();
-            const bannerSwiper = new Swiper('#banner-slider', { loop: true, autoplay: { delay: 3000 }, pagination: { el: '.swiper-pagination' } });
+            const bannerSwiper = new Swiper('#banner-slider', { loop: true, autoplay: { delay: 3000 }, pagination: { el: '.swiper-pagination', clickable: true } });
             try {
                 const settingsDoc = await db.collection('settings').doc('siteInfo').get();
                 if (settingsDoc.exists) {
@@ -252,10 +281,8 @@
                 }
                 const categories = (await db.collection('categories').orderBy('name').get()).docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
-                // সব প্রোডাক্ট একবারে লোড করে গ্লোবাল ভ্যারিয়েবলে রাখা
                 allProducts = (await db.collection('products').get()).docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-                // সাইড-মেন্যুতে ক্যাটাগরি যোগ করা - নতুন অংশ
                 const sideMenuLinks = document.querySelector('.side-menu-links');
                 if (categories.length > 0) {
                     const divider = document.createElement('div');
@@ -321,7 +348,6 @@
             }, 2000);
         });
 
-        // নতুন ফাংশন: নির্দিষ্ট ক্যাটাগরির প্রোডাক্ট দেখানোর জন্য
         function showCategoryPage(categoryName) {
             showPage('categoryProductsPage');
             document.getElementById('category-page-title').innerText = categoryName;
