@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <!-- গুগল সার্চ কনসোল ভেরিফিকেশন ট্যাগ (আমি এখানে বসিয়ে দিয়েছি) -->
+    <meta name="google-site-verification" content="google0fd623ee13923d48.html" />
+    
     <title>Daraz</title>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
@@ -87,7 +90,7 @@
         footer {
             background-color: #2E7D32; 
             color: white;
-            padding: 50px 20px 50px; /* উপরের প্যাডিং কমানো হয়েছে */
+            padding: 50px 20px 50px; 
             text-align: center;
             margin-top: 20px;
         }
@@ -111,20 +114,18 @@
             white-space: pre-line;
             text-align: left;
         }
-        /* নতুন লোগোর জন্য CSS */
         .footer-logos {
             display: flex;
-            flex-direction: column; /* লোগোগুলোকে উপরে-নিচে দেখানোর জন্য */
+            flex-direction: column; 
             justify-content: center;
             align-items: center;
             gap: 20px;
-            margin-bottom: 40px; /* নিচের কন্টেন্ট থেকে দূরত্ব */
+            margin-bottom: 40px; 
         }
         .footer-logos img {
-            max-width: 80%; /* মোবাইল স্ক্রিনের জন্য */
+            max-width: 80%; 
             height: auto;
         }
-        /* বড় স্ক্রিনের জন্য সাইজ ঠিক করা */
         @media (min-width: 600px) {
             .footer-logos img {
                 max-width: 300px;
@@ -141,7 +142,6 @@
     </div>
 
     <div id="auth-container">
-        <!-- Auth pages remain the same -->
         <div id="loginPage" class="page auth-page active">
             <div class="auth-card">
                 <div class="logo"><span id="loginSiteName"></span><img id="loginLogo" class="header-logo"></div>
@@ -174,7 +174,6 @@
                 <a href="javascript:void(0);" onclick="showPage('orderHistoryPage')">আমার অর্ডার</a>
                 <a href="javascript:void(0);" onclick="showPage('profilePage')">প্রোফাইল</a>
                 <a href="javascript:void(0);" id="logoutButton" onclick="logoutUser()">লগআউট</a>
-                <!-- Category links will be dynamically added here -->
             </div>
         </div>
         <header>
@@ -197,7 +196,7 @@
             <div id="profilePage" class="page">
                 <div class="page-header"><h2>আমার প্রোফাইল</h2></div>
                 <div class="profile-container">
-                    <img id="profile-pic-display" src="https://i.ibb.co/61Ym8vC/default-avatar.png">
+                    <img id="profile-pic-display" src="https://i.ibb.co/prRXDJLF/1000097700.png">
                     <input type="file" id="profilePicInput" accept="image/*" style="display:none;">
                     <label for="profilePicInput" class="btn">ছবি পরিবর্তন করুন</label>
                     <input type="text" id="userNameInput" placeholder="আপনার নাম">
@@ -207,12 +206,9 @@
                 </div>
             </div>
 
-            <!-- New category page -->
             <div id="categoryProductsPage" class="page">
                 <div class="page-header"><h2 id="category-page-title"></h2></div>
-                <div id="category-products-grid" class="products-grid">
-                    <!-- Products of the category will be shown here -->
-                </div>
+                <div id="category-products-grid" class="products-grid"></div>
             </div>
         </div>
         
@@ -220,7 +216,6 @@
     </div>
 
     <div id="orderModal" class="modal">
-        <!-- Modal content remains the same -->
         <div class="modal-content">
             <span class="close-btn" onclick="toggleOrderModal(false)">&times;</span>
             <h2>অর্ডার কনফার্ম করুন</h2>
@@ -283,7 +278,6 @@
         function toggleOrderModal(show, product = {}) { const orderModal = document.getElementById('orderModal'); if (show) { if (!currentUser) { alert("অর্ডার করার জন্য অনুগ্রহ করে লগইন করুন।"); showAuthPage('loginPage'); return; } document.getElementById('productId').value = product.id; document.getElementById('modalProductName').innerText = product.name; document.getElementById('customerName').value = currentUserData.displayName || ''; document.getElementById('customerPhone').value = currentUserData.phone || ''; orderModal.style.display = 'block'; } else { orderModal.style.display = 'none'; } }
         document.getElementById('orderForm').addEventListener('submit', e => { e.preventDefault(); db.collection('orders').add({ productId: document.getElementById('productId').value, productName: document.getElementById('modalProductName').innerText, userId: currentUser.uid, customerName: document.getElementById('customerName').value, customerAddress: document.getElementById('customerAddress').value, customerPhone: document.getElementById('customerPhone').value, status: 'Pending', orderDate: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { alert('অর্ডার সফলভাবে সম্পন্ন হয়েছে!'); toggleOrderModal(false); }); });
         
-        // পরিবর্তন এখানে: এই ফাংশনটি এখন দুটি ডকুমেন্ট একসাথে লোড করবে
         async function loadFooterData() { 
             try { 
                 const [siteInfoDoc, contactInfoDoc] = await Promise.all([
@@ -294,7 +288,6 @@
                 const footer = document.getElementById('main-footer'); 
                 let footerHtml = '';
 
-                // সাইট সেটিংস থেকে লোগো এবং কালার লোড করা
                 if (siteInfoDoc.exists) {
                     const siteData = siteInfoDoc.data();
                     if (siteData.footerColor) {
@@ -312,7 +305,6 @@
                     }
                 }
 
-                // যোগাযোগের তথ্য লোড করা
                 if (contactInfoDoc.exists) { 
                     const data = contactInfoDoc.data(); 
                     footerHtml += ` 
@@ -351,7 +343,7 @@
         
         document.addEventListener('DOMContentLoaded', async () => {
             await loadSiteSettings();
-            await loadFooterData(); // আগের দুটি ফাংশনের বদলে এই একটি ফাংশন কল করা হলো
+            await loadFooterData(); 
             const bannerSwiper = new Swiper('#banner-slider', { loop: true, autoplay: { delay: 3000 }, pagination: { el: '.swiper-pagination', clickable: true } });
             try {
                 const settingsDoc = await db.collection('settings').doc('siteInfo').get();
