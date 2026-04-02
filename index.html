@@ -12,7 +12,17 @@
 
     <style>
         :root { --daraz-orange: #f85606; --danger-red: #d9534f; --background-gray: #f0f2f5; --text-dark: #333; --text-light: #757575; }
-        html, body { height: 100%; width: 100%; margin: 0; padding: 0; overflow-x: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background-color: var(--background-gray); color: var(--text-dark); }
+        
+        /* কপি এবং টেক্সট সিলেক্ট বন্ধ করার জন্য CSS (Protection) */
+        html, body { 
+            height: 100%; width: 100%; margin: 0; padding: 0; overflow-x: hidden; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
+            background-color: var(--background-gray); color: var(--text-dark);
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none;     /* IE 10+ */
+            user-select: none;         /* Standard syntax */
+        }
+
         * { box-sizing: border-box; }
         .logo { font-size: 22px; font-weight: bold; color: var(--daraz-orange); cursor: pointer; display: flex; align-items: center; gap: 5px; }
         .header-logo { height: 22px; vertical-align: middle; }
@@ -196,7 +206,7 @@
             <div id="profilePage" class="page">
                 <div class="page-header"><h2>আমার প্রোফাইল</h2></div>
                 <div class="profile-container">
-                    <img id="profile-pic-display" src="https://i.ibb.co/WppNXD6j/1000097738.jpg">
+                    <img id="profile-pic-display" src="https://i.ibb.co/prRXDJLF/1000097700.png">
                     <input type="file" id="profilePicInput" accept="image/*" style="display:none;">
                     <label for="profilePicInput" class="btn">ছবি পরিবর্তন করুন</label>
                     <input type="text" id="userNameInput" placeholder="আপনার নাম">
@@ -229,22 +239,36 @@
         </div>
     </div>
 
+    <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     
     <script>
+        // কপিরাইট প্রটেকশন স্ক্রিপ্ট (Protection Script)
+        document.addEventListener('contextmenu', event => event.preventDefault()); // রাইট ক্লিক বন্ধ
+
+        document.onkeydown = function(e) {
+            // Ctrl+U, Ctrl+C, Ctrl+S, F12 এবং অন্যান্য ইন্সপেক্ট কি বন্ধ করা হয়েছে
+            if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 73 || e.keyCode === 74)) {
+                return false;
+            }
+            if (e.keyCode === 123) { // F12 বন্ধ
+                return false;
+            }
+        };
+
         const firebaseConfig = {
-  apiKey: "AIzaSyAVFJyAI2q946P2l57xwFN1DXQ54D7a7g0",
-  authDomain: "my-daraz-d216e.firebaseapp.com",
-  databaseURL: "https://my-daraz-d216e-default-rtdb.firebaseio.com",
-  projectId: "my-daraz-d216e",
-  storageBucket: "my-daraz-d216e.firebasestorage.app",
-  messagingSenderId: "316479124711",
-  appId: "1:316479124711:web:cc80d8d3aeb3c5e48f9e42",
-  measurementId: "G-RTGB9WQC3Y"
-};
+            apiKey: "AIzaSyAVFJyAI2q946P2l57xwFN1DXQ54D7a7g0",
+            authDomain: "my-daraz-d216e.firebaseapp.com",
+            databaseURL: "https://my-daraz-d216e-default-rtdb.firebaseio.com",
+            projectId: "my-daraz-d216e",
+            storageBucket: "my-daraz-d216e.firebasestorage.app",
+            messagingSenderId: "316479124711",
+            appId: "1:316479124711:web:cc80d8d3aeb3c5e48f9e42",
+            measurementId: "G-RTGB9WQC3Y"
+        };
         const IMGBB_API_KEY = "d617dab9d2117228e38549791d42104a";
 
         firebase.initializeApp(firebaseConfig);
@@ -265,18 +289,165 @@
 
         function showAuthPage(pageId) { document.querySelectorAll('#auth-container .page').forEach(p => p.classList.remove('active')); document.getElementById(pageId).classList.add('active'); }
         function toggleMenu(forceState) { document.getElementById('sideMenu').style.width = forceState ? "280px" : "0"; }
-        auth.onAuthStateChanged(user => { currentUser = user; if (user) { authContainer.style.display = 'none'; mainContainer.style.visibility = 'visible'; mainContainer.style.opacity = '1'; showPage('homePage'); db.collection('users').doc(user.uid).onSnapshot(doc => { currentUserData = doc.data() || {}; updateUserProfileUI(user, currentUserData); }); loadOrderHistory(); } else { authContainer.style.display = 'block'; mainContainer.style.visibility = 'hidden'; mainContainer.style.opacity = '0'; showAuthPage('loginPage'); } });
-        function updateUserProfileUI(user, userData) { const displayName = user.displayName || userData.displayName || ''; const photoURL = user.photoURL || userData.photoURL || 'https://i.ibb.co/WppNXD6j/1000097738.jpg'; const phone = userData.phone || ''; document.getElementById('user-icon-container').innerHTML = displayName ? `<img src="${photoURL}" alt="Profile">` : `<span class="login-icon">&#128100;</span>`; document.getElementById('user-profile-side').innerHTML = displayName ? `<img src="${photoURL}" alt="Profile"><span>${displayName}</span>` : `<span>Guest User</span>`; document.getElementById('profile-pic-display').src = photoURL; document.getElementById('userNameInput').value = displayName; document.getElementById('userPhoneInput').value = phone; }
-        document.getElementById('profilePicInput').addEventListener('change', e => { const file = e.target.files[0]; if (file) { newProfilePicFile = file; const reader = new FileReader(); reader.onload = (event) => { document.getElementById('profile-pic-display').src = event.target.result; }; reader.readAsDataURL(file); } });
-        function updateUserProfile() { if (!currentUser) return; const saveButton = document.querySelector('#profilePage .btn:not(.btn-danger)'); saveButton.innerText = 'সেভ হচ্ছে...'; const newName = document.getElementById('userNameInput').value; const newPhone = document.getElementById('userPhoneInput').value; if (newProfilePicFile) { const formData = new FormData(); formData.append('image', newProfilePicFile); fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData }).then(response => response.json()).then(result => { if (result.success) { saveProfileData(newName, newPhone, result.data.url, saveButton); } else { throw new Error(result.error.message); } }).catch(error => { alert('দুঃখিত, ছবি আপলোড করা যায়নি।'); saveButton.innerText = 'প্রোফাইল সেভ করুন'; }); } else { const existingPhotoURL = document.getElementById('profile-pic-display').src; saveProfileData(newName, newPhone, existingPhotoURL, saveButton); } }
-        function saveProfileData(name, phone, photoURL, button) { currentUser.updateProfile({ displayName: name, photoURL: photoURL }).then(() => { return db.collection('users').doc(currentUser.uid).set({ displayName: name, phone: phone, photoURL: photoURL, email: currentUser.email }, { merge: true }); }).then(() => { alert("প্রোফাইল সফলভাবে আপডেট হয়েছে!"); newProfilePicFile = null; button.innerText = 'প্রোফাইল সেভ করুন'; }).catch((error) => { console.error("Error updating profile:", error); alert("দুঃখিত, প্রোফাইল আপডেট করা যায়নি।"); button.innerText = 'প্রোফাইল সেভ করুন'; }); }
-        function registerUser() { const name = document.getElementById('registerName').value; const phone = document.getElementById('registerPhone').value; const email = document.getElementById('registerEmail').value; const password = document.getElementById('registerPassword').value; if (!name || !phone || !email || !password) return alert("অনুগ্রহ করে সকল তথ্য পূরণ করুন।"); auth.createUserWithEmailAndPassword(email, password).then(cred => { return cred.user.updateProfile({ displayName: name }).then(() => { return db.collection('users').doc(cred.user.uid).set({ displayName: name, phone: phone, email: email, photoURL: 'https://i.ibb.co/WppNXD6j/1000097738.jpg' }); }); }).then(() => { alert("রেজিস্ট্রেশন সফল হয়েছে! এখন লগইন করুন।"); showAuthPage('loginPage'); }).catch(err => alert("রেজিস্ট্রেশনে সমস্যা হয়েছে: " + err.message)); }
-        function loginUser() { const [email, password] = [document.getElementById('loginEmail').value, document.getElementById('loginPassword').value]; if (!email || !password) return alert("ইমেইল এবং পাসওয়ার্ড দিন।"); auth.signInWithEmailAndPassword(email, password).catch(err => alert("লগইন করতে সমস্যা হয়েছে: " + err.message)); }
+        
+        auth.onAuthStateChanged(user => { 
+            currentUser = user; 
+            if (user) { 
+                authContainer.style.display = 'none'; 
+                mainContainer.style.visibility = 'visible'; 
+                mainContainer.style.opacity = '1'; 
+                showPage('homePage'); 
+                db.collection('users').doc(user.uid).onSnapshot(doc => { 
+                    currentUserData = doc.data() || {}; 
+                    updateUserProfileUI(user, currentUserData); 
+                }); 
+                loadOrderHistory(); 
+            } else { 
+                authContainer.style.display = 'block'; 
+                mainContainer.style.visibility = 'hidden'; 
+                mainContainer.style.opacity = '0'; 
+                showAuthPage('loginPage'); 
+            } 
+        });
+
+        function updateUserProfileUI(user, userData) { 
+            const displayName = user.displayName || userData.displayName || ''; 
+            const photoURL = user.photoURL || userData.photoURL || 'https://i.ibb.co/prRXDJLF/1000097700.png'; 
+            const phone = userData.phone || ''; 
+            document.getElementById('user-icon-container').innerHTML = displayName ? `<img src="${photoURL}" alt="Profile">` : `<span class="login-icon">&#128100;</span>`; 
+            document.getElementById('user-profile-side').innerHTML = displayName ? `<img src="${photoURL}" alt="Profile"><span>${displayName}</span>` : `<span>Guest User</span>`; 
+            document.getElementById('profile-pic-display').src = photoURL; 
+            document.getElementById('userNameInput').value = displayName; 
+            document.getElementById('userPhoneInput').value = phone; 
+        }
+
+        document.getElementById('profilePicInput').addEventListener('change', e => { 
+            const file = e.target.files[0]; 
+            if (file) { 
+                newProfilePicFile = file; 
+                const reader = new FileReader(); 
+                reader.onload = (event) => { document.getElementById('profile-pic-display').src = event.target.result; }; 
+                reader.readAsDataURL(file); 
+            } 
+        });
+
+        function updateUserProfile() { 
+            if (!currentUser) return; 
+            const saveButton = document.querySelector('#profilePage .btn:not(.btn-danger)'); 
+            saveButton.innerText = 'সেভ হচ্ছে...'; 
+            const newName = document.getElementById('userNameInput').value; 
+            const newPhone = document.getElementById('userPhoneInput').value; 
+            
+            if (newProfilePicFile) { 
+                const formData = new FormData(); 
+                formData.append('image', newProfilePicFile); 
+                fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData }).then(response => response.json()).then(result => { 
+                    if (result.success) { 
+                        saveProfileData(newName, newPhone, result.data.url, saveButton); 
+                    } else { 
+                        throw new Error(result.error.message); 
+                    } 
+                }).catch(error => { 
+                    alert('দুঃখিত, ছবি আপলোড করা যায়নি।'); 
+                    saveButton.innerText = 'প্রোফাইল সেভ করুন'; 
+                }); 
+            } else { 
+                const existingPhotoURL = document.getElementById('profile-pic-display').src; 
+                saveProfileData(newName, newPhone, existingPhotoURL, saveButton); 
+            } 
+        }
+
+        function saveProfileData(name, phone, photoURL, button) { 
+            currentUser.updateProfile({ displayName: name, photoURL: photoURL }).then(() => { 
+                return db.collection('users').doc(currentUser.uid).set({ 
+                    displayName: name, phone: phone, photoURL: photoURL, email: currentUser.email 
+                }, { merge: true }); 
+            }).then(() => { 
+                alert("প্রোফাইল সফলভাবে আপডেট হয়েছে!"); 
+                newProfilePicFile = null; 
+                button.innerText = 'প্রোফাইল সেভ করুন'; 
+            }).catch((error) => { 
+                console.error("Error updating profile:", error); 
+                alert("দুঃখিত, প্রোফাইল আপডেট করা যায়নি।"); 
+                button.innerText = 'প্রোফাইল সেভ করুন'; 
+            }); 
+        }
+
+        function registerUser() { 
+            const name = document.getElementById('registerName').value; 
+            const phone = document.getElementById('registerPhone').value; 
+            const email = document.getElementById('registerEmail').value; 
+            const password = document.getElementById('registerPassword').value; 
+            if (!name || !phone || !email || !password) return alert("অনুগ্রহ করে সকল তথ্য পূরণ করুন।"); 
+            
+            auth.createUserWithEmailAndPassword(email, password).then(cred => { 
+                return cred.user.updateProfile({ displayName: name }).then(() => { 
+                    return db.collection('users').doc(cred.user.uid).set({ 
+                        displayName: name, 
+                        phone: phone, 
+                        email: email, 
+                        photoURL: 'https://i.ibb.co/prRXDJLF/1000097700.png' // আপনার ডিফল্ট লিঙ্ক এখানে দেওয়া হলো
+                    }); 
+                }); 
+            }).then(() => { 
+                alert("রেজিস্ট্রেশন সফল হয়েছে! এখন লগইন করুন।"); 
+                showAuthPage('loginPage'); 
+            }).catch(err => alert("রেজিস্ট্রেশনে সমস্যা হয়েছে: " + err.message)); 
+        }
+
+        function loginUser() { 
+            const [email, password] = [document.getElementById('loginEmail').value, document.getElementById('loginPassword').value]; 
+            if (!email || !password) return alert("ইমেইল এবং পাসওয়ার্ড দিন।"); 
+            auth.signInWithEmailAndPassword(email, password).catch(err => alert("লগইন করতে সমস্যা হয়েছে: " + err.message)); 
+        }
+
         function logoutUser() { auth.signOut(); }
         function handleUserIconClick() { showPage(currentUser ? 'profilePage' : 'loginPage'); }
-        function deleteUserAccount() { if (!currentUser) return; if (confirm("আপনি কি নিশ্চিত? আপনার অ্যাকাউন্ট স্থায়ীভাবে মুছে ফেলা হবে।")) { db.collection('users').doc(currentUser.uid).delete().then(() => currentUser.delete()).catch(err => { if (err.code === 'auth/requires-recent-login') { alert("নিরাপত্তার জন্য, আবার লগইন করে চেষ্টা করুন।"); logoutUser(); } else { alert("অ্যাকাউন্ট ডিলিট করার সময় একটি সমস্যা হয়েছে।"); } }); } }
-        function toggleOrderModal(show, product = {}) { const orderModal = document.getElementById('orderModal'); if (show) { if (!currentUser) { alert("অর্ডার করার জন্য অনুগ্রহ করে লগইন করুন।"); showAuthPage('loginPage'); return; } document.getElementById('productId').value = product.id; document.getElementById('modalProductName').innerText = product.name; document.getElementById('customerName').value = currentUserData.displayName || ''; document.getElementById('customerPhone').value = currentUserData.phone || ''; orderModal.style.display = 'block'; } else { orderModal.style.display = 'none'; } }
-        document.getElementById('orderForm').addEventListener('submit', e => { e.preventDefault(); db.collection('orders').add({ productId: document.getElementById('productId').value, productName: document.getElementById('modalProductName').innerText, userId: currentUser.uid, customerName: document.getElementById('customerName').value, customerAddress: document.getElementById('customerAddress').value, customerPhone: document.getElementById('customerPhone').value, status: 'Pending', orderDate: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { alert('অর্ডার সফলভাবে সম্পন্ন হয়েছে!'); toggleOrderModal(false); }); });
+        
+        function deleteUserAccount() { 
+            if (!currentUser) return; 
+            if (confirm("আপনি কি নিশ্চিত? আপনার অ্যাকাউন্ট স্থায়ীভাবে মুছে ফেলা হবে।")) { 
+                db.collection('users').doc(currentUser.uid).delete().then(() => currentUser.delete()).catch(err => { 
+                    if (err.code === 'auth/requires-recent-login') { 
+                        alert("নিরাপত্তার জন্য, আবার লগইন করে চেষ্টা করুন।"); 
+                        logoutUser(); 
+                    } else { 
+                        alert("অ্যাকাউন্ট ডিলিট করার সময় একটি সমস্যা হয়েছে।"); 
+                    } 
+                }); 
+            } 
+        }
+
+        function toggleOrderModal(show, product = {}) { 
+            const orderModal = document.getElementById('orderModal'); 
+            if (show) { 
+                if (!currentUser) { alert("অর্ডার করার জন্য অনুগ্রহ করে লগইন করুন।"); showAuthPage('loginPage'); return; } 
+                document.getElementById('productId').value = product.id; 
+                document.getElementById('modalProductName').innerText = product.name; 
+                document.getElementById('customerName').value = currentUserData.displayName || ''; 
+                document.getElementById('customerPhone').value = currentUserData.phone || ''; 
+                orderModal.style.display = 'block'; 
+            } else { 
+                orderModal.style.display = 'none'; 
+            } 
+        }
+
+        document.getElementById('orderForm').addEventListener('submit', e => { 
+            e.preventDefault(); 
+            db.collection('orders').add({ 
+                productId: document.getElementById('productId').value, 
+                productName: document.getElementById('modalProductName').innerText, 
+                userId: currentUser.uid, 
+                customerName: document.getElementById('customerName').value, 
+                customerAddress: document.getElementById('customerAddress').value, 
+                customerPhone: document.getElementById('customerPhone').value, 
+                status: 'Pending', 
+                orderDate: firebase.firestore.FieldValue.serverTimestamp() 
+            }).then(() => { 
+                alert('অর্ডার সফলভাবে সম্পন্ন হয়েছে!'); 
+                toggleOrderModal(false); 
+            }); 
+        });
         
         async function loadFooterData() { 
             try { 
@@ -290,17 +461,11 @@
 
                 if (siteInfoDoc.exists) {
                     const siteData = siteInfoDoc.data();
-                    if (siteData.footerColor) {
-                        footer.style.backgroundColor = siteData.footerColor;
-                    }
+                    if (siteData.footerColor) { footer.style.backgroundColor = siteData.footerColor; }
                     if (siteData.footerLogo1Url || siteData.footerLogo2Url) {
                         footerHtml += `<div class="footer-logos">`;
-                        if (siteData.footerLogo1Url) {
-                            footerHtml += `<img src="${siteData.footerLogo1Url}" alt="Footer Logo 1">`;
-                        }
-                        if (siteData.footerLogo2Url) {
-                            footerHtml += `<img src="${siteData.footerLogo2Url}" alt="Footer Logo 2">`;
-                        }
+                        if (siteData.footerLogo1Url) { footerHtml += `<img src="${siteData.footerLogo1Url}" alt="Footer Logo 1">`; }
+                        if (siteData.footerLogo2Url) { footerHtml += `<img src="${siteData.footerLogo2Url}" alt="Footer Logo 2">`; }
                         footerHtml += `</div>`;
                     }
                 }
@@ -318,11 +483,10 @@
                             ${data.youtube && data.youtubeIconUrl ? `<a href="${data.youtube}" target="_blank"><img src="${data.youtubeIconUrl}" alt="YouTube"></a>` : ''} 
                         </div>
                         ${data.address && data.addressIconUrl ? `<div class="footer-contact-item"><img src="${data.addressIconUrl}" alt="Location"><span>${data.address}</span></div>` : ''}
+                        <p style="font-size: 12px; margin-top: 15px;">© 2024 My Daraz. All Rights Reserved.</p>
                     `; 
                 }
-                
                 footer.innerHTML = footerHtml;
-
             } catch (error) { console.error("Error loading footer data: ", error); } 
         }
 
@@ -339,7 +503,18 @@
             } catch (error) { console.error("Error loading site settings:", error); } 
         }
 
-        function loadOrderHistory() { if (!currentUser) return; db.collection('orders').where('userId', '==', currentUser.uid).orderBy('orderDate', 'desc').onSnapshot(snapshot => { const list = document.getElementById('order-history-list'); if (snapshot.empty) { list.innerHTML = "<p style='text-align:center;'>আপনার কোনো অর্ডার নেই।</p>"; return; } list.innerHTML = snapshot.docs.map(doc => { const order = doc.data(); const orderDate = order.orderDate ? new Date(order.orderDate.seconds * 1000).toLocaleDateString('bn-BD') : 'N/A'; return `<div class="list-item"><h4>${order.productName}</h4><p>অর্ডারের তারিখ: ${orderDate}</p><p class="status">স্ট্যাটাস: ${order.status}</p></div>`; }).join(''); }); }
+        function loadOrderHistory() { 
+            if (!currentUser) return; 
+            db.collection('orders').where('userId', '==', currentUser.uid).orderBy('orderDate', 'desc').onSnapshot(snapshot => { 
+                const list = document.getElementById('order-history-list'); 
+                if (snapshot.empty) { list.innerHTML = "<p style='text-align:center;'>আপনার কোনো অর্ডার নেই।</p>"; return; } 
+                list.innerHTML = snapshot.docs.map(doc => { 
+                    const order = doc.data(); 
+                    const orderDate = order.orderDate ? new Date(order.orderDate.seconds * 1000).toLocaleDateString('bn-BD') : 'N/A'; 
+                    return `<div class="list-item"><h4>${order.productName}</h4><p>অর্ডারের তারিখ: ${orderDate}</p><p class="status">স্ট্যাটাস: ${order.status}</p></div>`; 
+                }).join(''); 
+            }); 
+        }
         
         document.addEventListener('DOMContentLoaded', async () => {
             await loadSiteSettings();
@@ -354,7 +529,6 @@
                     bannerSwiper.update();
                 }
                 const categories = (await db.collection('categories').orderBy('name').get()).docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                
                 allProducts = (await db.collection('products').get()).docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
                 const sideMenuLinks = document.querySelector('.side-menu-links');
@@ -362,7 +536,6 @@
                     const divider = document.createElement('div');
                     divider.className = 'category-divider';
                     sideMenuLinks.appendChild(divider);
-
                     categories.forEach(cat => {
                         const link = document.createElement('a');
                         link.href = `javascript:void(0);`;
@@ -383,82 +556,35 @@
                             const hasLink = p.link && p.link.trim() !== '' && p.link.startsWith('http');
                             const productDataString = JSON.stringify(p).replace(/'/g, "\\'");
                             if (hasLink) {
-                                return `
-                                <a href="${p.link}" target="_blank" class="product-card-link">
-                                    ${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}
-                                    <img src="${p.imageUrl}">
-                                    <div class="product-info">
-                                        <h3>${p.name}</h3>
-                                        <p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p>
-                                        <div class="btn-div">অর্ডার করুন</div>
-                                    </div>
-                                </a>`;
+                                return `<a href="${p.link}" target="_blank" class="product-card-link">${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}<img src="${p.imageUrl}"><div class="product-info"><h3>${p.name}</h3><p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p><div class="btn-div">অর্ডার করুন</div></div></a>`;
                             } else {
-                                return `
-                                <div class="product-card">
-                                    ${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}
-                                    <img src="${p.imageUrl}">
-                                    <div class="product-info">
-                                        <h3>${p.name}</h3>
-                                        <p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p>
-                                        <button class="btn" onclick='toggleOrderModal(true, ${productDataString})'>অর্ডার করুন</button>
-                                    </div>
-                                </div>`;
+                                return `<div class="product-card">${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}<img src="${p.imageUrl}"><div class="product-info"><h3>${p.name}</h3><p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p><button class="btn" onclick='toggleOrderModal(true, ${productDataString})'>অর্ডার করুন</button></div></div>`;
                             }
                         }).join('');
                         productHtml += `</div></div>`;
                     }
                 });
                 document.getElementById('product-sections-container').innerHTML = productHtml;
-            } catch (error) {
-                console.error("Error loading initial data:", error);
-            }
+            } catch (error) { console.error("Error loading initial data:", error); }
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
-                if (splash) {
-                    splash.style.opacity = '0';
-                    setTimeout(() => splash.style.display = 'none', 500);
-                }
+                if (splash) { splash.style.opacity = '0'; setTimeout(() => splash.style.display = 'none', 500); }
             }, 2000);
         });
 
         function showCategoryPage(categoryName) {
             showPage('categoryProductsPage');
             document.getElementById('category-page-title').innerText = categoryName;
-
             const filteredProducts = allProducts.filter(p => p.category === categoryName);
             const gridContainer = document.getElementById('category-products-grid');
-
-            if (filteredProducts.length === 0) {
-                gridContainer.innerHTML = "<p style='text-align:center; width: 100%;'>এই ক্যাটাগরিতে কোনো পণ্য পাওয়া যায়নি।</p>";
-                return;
-            }
-
+            if (filteredProducts.length === 0) { gridContainer.innerHTML = "<p style='text-align:center; width: 100%;'>এই ক্যাটাগরিতে কোনো পণ্য পাওয়া যায়নি।</p>"; return; }
             gridContainer.innerHTML = filteredProducts.map(p => {
                 const hasLink = p.link && p.link.trim() !== '' && p.link.startsWith('http');
                 const productDataString = JSON.stringify(p).replace(/'/g, "\\'");
                 if (hasLink) {
-                    return `
-                    <a href="${p.link}" target="_blank" class="product-card-link">
-                        ${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}
-                        <img src="${p.imageUrl}">
-                        <div class="product-info">
-                            <h3>${p.name}</h3>
-                            <p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p>
-                            <div class="btn-div">অর্ডার করুন</div>
-                        </div>
-                    </a>`;
+                    return `<a href="${p.link}" target="_blank" class="product-card-link">${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}<img src="${p.imageUrl}"><div class="product-info"><h3>${p.name}</h3><p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p><div class="btn-div">অর্ডার করুন</div></div></a>`;
                 } else {
-                    return `
-                    <div class="product-card">
-                        ${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}
-                        <img src="${p.imageUrl}">
-                        <div class="product-info">
-                            <h3>${p.name}</h3>
-                            <p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p>
-                            <button class="btn" onclick='toggleOrderModal(true, ${productDataString})'>অর্ডার করুন</button>
-                        </div>
-                    </div>`;
+                    return `<div class="product-card">${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}<img src="${p.imageUrl}"><div class="product-info"><h3>${p.name}</h3><p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p><button class="btn" onclick='toggleOrderModal(true, ${productDataString})'>অর্ডার করুন</button></div></div>`;
                 }
             }).join('');
         }
