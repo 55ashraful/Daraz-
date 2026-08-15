@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- গুগল সার্চ কনসোল ভেরিফিকেশন ট্যাগ -->
     <meta name="google-site-verification" content="twRpqy_GzEIxon6mFCy_ghR1Uzhlxnly6r2oBPhWYvI" />
     
     <title>My Daraz - Online Shopping Project</title>
@@ -40,13 +39,30 @@
         .side-menu { height: 100%; width: 0; position: fixed; z-index: 200; top: 0; left: 0; background-color: #fff; overflow-x: hidden; transition: 0.4s; }
         .side-menu-header { padding: 20px; background: #f8f8f8; display: flex; justify-content: space-between; align-items: center; }
         .user-info { display: flex; align-items: center; gap: 10px; }
-        .user-info img { height: 50px; width: 50px; border-radius: 50%; }
+        .user-info img { height: 50px; width: 50px; border-radius: 50%; object-fit: cover; }
         .user-info span { font-weight: bold; }
         .close-btn { font-size: 30px; cursor: pointer; }
         .side-menu-links a { padding: 15px 20px; text-decoration: none; font-size: 16px; color: #333; display: block; border-bottom: 1px solid #f0f0f0; }
         .side-menu-links .category-divider { margin: 10px 20px; border-top: 2px solid var(--daraz-orange); }
         .btn { width: 100%; padding: 12px; background: var(--daraz-orange); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; }
         .btn-danger { background-color: var(--danger-red); margin-top: 10px; }
+        
+        .btn-google { 
+            background-color: #ffffff; 
+            color: #3c4043; 
+            border: 1px solid #dadce0; 
+            margin-top: 10px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            font-weight: 500;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+        .btn-google img { width: 18px; height: 18px; }
+        .btn-google:hover { background-color: #f8f9fa; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+
         .auth-page p { margin-top: 20px; font-size: 14px; }
         .auth-page .link-like { color: var(--daraz-orange); text-decoration: none; font-weight: bold; cursor: pointer; }
         .page-header { padding: 20px; background: #fff; text-align: center; margin-bottom: 10px; }
@@ -65,7 +81,35 @@
         .section { background: #fff; margin-top: 10px; }
         .section-header { padding: 15px; }
         .section-header h2 { font-size: 16px; color: var(--daraz-orange); margin: 0; }
-        .categories-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 15px; text-align: center; font-size: 12px; }
+        
+        .categories-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 12px; 
+            padding: 15px; 
+            text-align: center; 
+        }
+        .category-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .category-card img { 
+            width: 100%; 
+            height: 75px; 
+            object-fit: cover; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        .category-card span {
+            display: block;
+            margin-top: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #000000;
+            line-height: 1.2;
+        }
+
         .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; }
         .product-card, .product-card-link { background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: relative; display: block; text-decoration: none; color: var(--text-dark); }
         .profile-container { padding: 20px; text-align: center; }
@@ -73,7 +117,7 @@
         .profile-container input { width: calc(100% - 22px); padding: 10px; margin-bottom: 15px; }
         .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); }
         .modal-content { background-color: #fefefe; margin: 25% auto; padding: 20px; border-radius: 8px; width: 90%; max-width: 500px; }
-        .list-container .list-item { background: #fff; padding: 15px; margin: 0 10px 10px; border-radius: 5px; }
+        .list-container .list-item { background: #fff; padding: 15px; margin: 0 10px 10px; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .discount-badge { position: absolute; top: 8px; left: 8px; background: var(--daraz-orange); color: white; font-size: 12px; font-weight: bold; padding: 3px 8px; border-radius: 5px; }
         .product-card img, .product-card-link img { width: 100%; height: 150px; object-fit: cover; }
         .product-info { padding: 10px; text-align: center; }
@@ -81,11 +125,11 @@
         .price { color: var(--daraz-orange); font-weight: bold; }
         .old-price { text-decoration: line-through; color: #999; font-size: 12px; margin-left: 5px; }
         .product-card .btn, .product-card-link .btn-div { display: block; width: 100%; padding: 8px; font-size: 14px; margin-top: 8px; text-align: center; background-color: var(--daraz-orange); color: white; border-radius: 5px; }
-        .list-item h4 { margin: 0 0 5px; } .list-item p { margin: 2px 0; font-size: 14px; }
+        .list-item h4 { margin: 0 0 5px; color: #333; } 
+        .list-item p { margin: 4px 0; font-size: 14px; color: #666; }
         .list-item .status { font-weight: bold; color: var(--daraz-orange); }
         .modal-content input { width: calc(100% - 22px); padding: 10px; margin-top: 5px; margin-bottom: 10px; }
         .modal-content label { font-weight: bold; }
-        .category-card img { width: 100%; border-radius: 8px; }
         
         footer { background-color: #2E7D32; color: white; padding: 50px 20px 50px; text-align: center; margin-top: 20px; }
         .footer-socials { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
@@ -118,7 +162,6 @@
         .free-item-banner .banner-arrow { z-index: 1; font-size: 20px; animation: arrowBounce 1s infinite; }
         @keyframes arrowBounce { 0%,100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
 
-        /* ============ ফ্রি প্রোডাক্ট পেজ - নতুন ডিজাইন ============ */
         #freeProductPage {
             background: linear-gradient(160deg, #1a0533 0%, #2d1055 20%, #5b21b6 50%, #7c3aed 75%, #a855f7 100%);
             min-height: 100vh; color: white; padding-bottom: 40px; position: relative;
@@ -275,6 +318,10 @@
                 <div class="input-group"><span>📧</span><input type="email" id="loginEmail" placeholder="ইমেইল"></div>
                 <div class="input-group"><span>🔒</span><input type="password" id="loginPassword" placeholder="পাসওয়ার্ড"></div>
                 <button class="btn" onclick="loginUser()">লগইন</button>
+                <button class="btn btn-google" onclick="loginWithGoogle()">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
+                    Sign in with Google
+                </button>
                 <p>অ্যাকাউন্ট নেই? <span class="link-like" onclick="showAuthPage('registerPage')">রেজিস্টার করুন</span></p>
             </div>
         </div>
@@ -287,6 +334,10 @@
                 <div class="input-group"><span>📧</span><input type="email" id="registerEmail" placeholder="ইমেইল" required></div>
                 <div class="input-group"><span>🔒</span><input type="password" id="registerPassword" placeholder="পাসওয়ার্ড" required></div>
                 <button class="btn" onclick="registerUser()">রেজিস্টার</button>
+                <button class="btn btn-google" onclick="loginWithGoogle()">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
+                    Sign in with Google
+                </button>
                 <p>অ্যাকাউন্ট আছে? <span class="link-like" onclick="showAuthPage('loginPage')">লগইন করুন</span></p>
             </div>
         </div>
@@ -313,7 +364,6 @@
                 <div class="search-container"><div class="search-bar"><input type="text" id="searchInput" placeholder="Daraz-এ খুঁজুন..."><button>🔍</button></div></div>
                 <div class="swiper-container" id="banner-slider"><div class="swiper-wrapper" id="banner-wrapper"></div><div class="swiper-pagination"></div></div>
 
-                <!-- ফ্রি প্রোডাক্ট ব্যানার -->
                 <div class="free-item-banner" onclick="showPage('freeProductPage')">
                     <div class="banner-text">🎁 ফ্রি গিফট নিতে চাইলে এখানে ক্লিক করেন ,👈🏻 </div>
                     <div class="banner-arrow">›</div>
@@ -323,7 +373,6 @@
                 <div id="product-sections-container"></div>
             </main>
 
-            <!-- ============ নতুন ফ্রি ক্লেইম পেজ ============ -->
             <div id="freeProductPage" class="page">
                 <div class="free-header">
                     <div class="free-back-btn" onclick="showPage('homePage')">←</div>
@@ -382,8 +431,11 @@
 
             <div id="orderHistoryPage" class="page">
                 <div class="page-header"><h2>আমার অর্ডার সমূহ</h2></div>
-                <div id="order-history-list" class="list-container"></div>
+                <div id="order-history-list" class="list-container">
+                    <p style="text-align:center;">লোড হচ্ছে...</p>
+                </div>
             </div>
+            
             <div id="profilePage" class="page">
                 <div class="page-header"><h2>আমার প্রোফাইল</h2></div>
                 <div class="profile-container">
@@ -420,14 +472,12 @@
         </div>
     </div>
 
-    <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     
     <script>
-        // কপিরাইট সুরক্ষা
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
             if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 73 || e.keyCode === 74)) return false;
@@ -452,8 +502,8 @@
         let currentUser = null, currentUserData = {};
         let newProfilePicFile = null;
         let allProducts = [];
+        let bannerSwiper = null;
 
-        // ফ্রি প্রোডাক্ট লোড করা
         let freeProductLink = "#";
         function loadFreeProductAdmin() {
             db.collection('settings').doc('freeProduct').onSnapshot(doc => {
@@ -489,6 +539,75 @@
         function showAuthPage(pageId) { document.querySelectorAll('#auth-container .page').forEach(p => p.classList.remove('active')); document.getElementById(pageId).classList.add('active'); }
         function toggleMenu(forceState) { document.getElementById('sideMenu').style.width = forceState ? "280px" : "0"; }
         
+        // অ্যাপ ডেটা লোড করার সেন্ট্রাল ফাংশন
+        let isAppDataLoaded = false;
+        async function loadAppDataOnce() {
+            if (isAppDataLoaded) return;
+            isAppDataLoaded = true;
+            await loadSiteSettings();
+            await loadFooterData();
+            
+            if (!bannerSwiper) {
+                bannerSwiper = new Swiper('#banner-slider', { loop: true, autoplay: { delay: 3000 }, pagination: { el: '.swiper-pagination', clickable: true } });
+            }
+
+            try {
+                const settingsDoc = await db.collection('settings').doc('siteInfo').get();
+                if (settingsDoc.exists) {
+                    const settings = settingsDoc.data();
+                    const bannerUrls = settings.bannerUrl || []; 
+                    document.getElementById('banner-wrapper').innerHTML = bannerUrls.map(url => `<div class="swiper-slide"><img src="${url.trim()}" alt="Banner"></div>`).join('');
+                    if(bannerSwiper) bannerSwiper.update();
+                }
+                const categories = (await db.collection('categories').orderBy('name').get()).docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                allProducts = (await db.collection('products').get()).docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                const sideMenuLinks = document.querySelector('.side-menu-links');
+                // পুরানো ক্যাটাগরি লিংকগুলো ডুপ্লিকেট হওয়া এড়াতে পরিষ্কার করা হলো
+                sideMenuLinks.querySelectorAll('.dynamic-category-link, .category-divider').forEach(el => el.remove());
+
+                if (categories.length > 0) {
+                    const divider = document.createElement('div');
+                    divider.className = 'category-divider dynamic-category-link';
+                    sideMenuLinks.appendChild(divider);
+                    categories.forEach(cat => {
+                        const link = document.createElement('a');
+                        link.href = `javascript:void(0);`;
+                        link.className = 'dynamic-category-link';
+                        link.innerText = cat.name;
+                        link.onclick = () => showCategoryPage(cat.name);
+                        sideMenuLinks.appendChild(link);
+                    });
+                }
+
+                document.getElementById('categories-grid').innerHTML = categories.map(c => `<div class="category-card"><img src="${c.imageUrl}"><span>${c.name}</span></div>`).join('');
+                
+                let productHtml = '';
+                categories.forEach(cat => {
+                    const catProducts = allProducts.filter(p => p.category === cat.name);
+                    if (catProducts.length > 0) {
+                        productHtml += `<div class="section"><div class="section-header"><h2>${cat.name}</h2></div><div class="products-grid">`;
+                        productHtml += catProducts.map(p => {
+                            const hasLink = p.link && p.link.trim() !== '' && p.link.startsWith('http');
+                            const productDataString = JSON.stringify(p).replace(/'/g, "\\'");
+                            if (hasLink) {
+                                return `<a href="${p.link}" target="_blank" class="product-card-link">${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}<img src="${p.imageUrl}"><div class="product-info"><h3>${p.name}</h3><p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p><div class="btn-div">অর্ডার করুন</div></div></a>`;
+                            } else {
+                                return `<div class="product-card">${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}<img src="${p.imageUrl}"><div class="product-info"><h3>${p.name}</h3><p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p><button class="btn" onclick='toggleOrderModal(true, ${productDataString})'>অর্ডার করুন</button></div></div>`;
+                            }
+                        }).join('');
+                        productHtml += `</div></div>`;
+                    }
+                });
+                document.getElementById('product-sections-container').innerHTML = productHtml;
+            } catch (error) { console.error("Error loading initial data:", error); }
+
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if (splash) { splash.style.opacity = '0'; setTimeout(() => splash.style.display = 'none', 500); }
+            }, 1000);
+        }
+
         auth.onAuthStateChanged(user => { 
             currentUser = user; 
             if (user) { 
@@ -496,10 +615,37 @@
                 mainContainer.style.visibility = 'visible'; 
                 mainContainer.style.opacity = '1'; 
                 showPage('homePage'); 
-                db.collection('users').doc(user.uid).onSnapshot(doc => { 
+
+                // লগইন করার সাথে সাথেই যেন রিফ্রেশ ছাড়াই ডেটা চলে আসে
+                loadAppDataOnce();
+
+                const userDocRef = db.collection('users').doc(user.uid);
+                userDocRef.get().then(doc => {
+                    let photoURL = user.photoURL || 'https://i.ibb.co/prRXDJLF/1000097700.png';
+                    if (photoURL && photoURL.includes('googleusercontent.com')) {
+                        photoURL = photoURL.replace(/=s\d+-c/, '=s400-c');
+                    }
+
+                    if (!doc.exists) {
+                        const initialData = {
+                            displayName: user.displayName || 'User',
+                            email: user.email || '',
+                            phone: user.phoneNumber || '',
+                            photoURL: photoURL
+                        };
+                        userDocRef.set(initialData);
+                    } else {
+                        if (user.photoURL) {
+                            userDocRef.set({ photoURL: photoURL }, { merge: true });
+                        }
+                    }
+                });
+
+                userDocRef.onSnapshot(doc => { 
                     currentUserData = doc.data() || {}; 
                     updateUserProfileUI(user, currentUserData); 
                 }); 
+
                 loadOrderHistory(); 
                 loadFreeProductAdmin(); 
             } else { 
@@ -512,7 +658,7 @@
 
         function updateUserProfileUI(user, userData) { 
             const displayName = user.displayName || userData.displayName || ''; 
-            const photoURL = user.photoURL || userData.photoURL || 'https://i.ibb.co/prRXDJLF/1000097700.png'; 
+            const photoURL = userData.photoURL || user.photoURL || 'https://i.ibb.co/prRXDJLF/1000097700.png'; 
             const phone = userData.phone || ''; 
             document.getElementById('user-icon-container').innerHTML = displayName ? `<img src="${photoURL}" alt="Profile">` : `<span class="login-icon">&#128100;</span>`; 
             document.getElementById('user-profile-side').innerHTML = displayName ? `<img src="${photoURL}" alt="Profile"><span>${displayName}</span>` : `<span>Guest User</span>`; 
@@ -587,6 +733,27 @@
             auth.signInWithEmailAndPassword(email, password).catch(err => alert("লগইন করতে সমস্যা হয়েছে: " + err.message)); 
         }
 
+        function loginWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).then((result) => {
+                const user = result.user;
+                let photoURL = user.photoURL || 'https://i.ibb.co/prRXDJLF/1000097700.png';
+                if (photoURL && photoURL.includes('googleusercontent.com')) {
+                    photoURL = photoURL.replace(/=s\d+-c/, '=s400-c');
+                }
+                db.collection('users').doc(user.uid).set({
+                    displayName: user.displayName || 'User',
+                    email: user.email || '',
+                    photoURL: photoURL
+                }, { merge: true }).then(() => {
+                    // সফল লগইনের পর ডেটা লোড নিশ্চিত করা হলো
+                    loadAppDataOnce();
+                });
+            }).catch((error) => {
+                alert("গুগল লগইনে সমস্যা হয়েছে: " + error.message);
+            });
+        }
+
         function logoutUser() { auth.signOut(); }
         function handleUserIconClick() { showPage(currentUser ? 'profilePage' : 'loginPage'); }
         
@@ -615,10 +782,21 @@
         document.getElementById('orderForm').addEventListener('submit', e => { 
             e.preventDefault(); 
             db.collection('orders').add({ 
-                productId: document.getElementById('productId').value, productName: document.getElementById('modalProductName').innerText, userId: currentUser.uid, 
-                customerName: document.getElementById('customerName').value, customerAddress: document.getElementById('customerAddress').value, 
-                customerPhone: document.getElementById('customerPhone').value, status: 'Pending', orderDate: firebase.firestore.FieldValue.serverTimestamp() 
-            }).then(() => { alert('অর্ডার সফলভাবে সম্পন্ন হয়েছে!'); toggleOrderModal(false); }); 
+                productId: document.getElementById('productId').value, 
+                productName: document.getElementById('modalProductName').innerText, 
+                userId: currentUser.uid, 
+                customerName: document.getElementById('customerName').value, 
+                customerAddress: document.getElementById('customerAddress').value, 
+                customerPhone: document.getElementById('customerPhone').value, 
+                status: 'Pending', 
+                orderDate: firebase.firestore.FieldValue.serverTimestamp() 
+            }).then(() => { 
+                alert('অর্ডার সফলভাবে সম্পন্ন হয়েছে!'); 
+                toggleOrderModal(false); 
+                showPage('orderHistoryPage'); 
+            }).catch(err => {
+                alert('অর্ডার করতে সমস্যা হয়েছে: ' + err.message);
+            }); 
         });
         
         async function loadFooterData() { 
@@ -648,7 +826,7 @@
                             ${data.youtube && data.youtubeIconUrl ? `<a href="${data.youtube}" target="_blank"><img src="${data.youtubeIconUrl}" alt="YouTube"></a>` : ''} 
                         </div>
                         ${data.address && data.addressIconUrl ? `<div class="footer-contact-item"><img src="${data.addressIconUrl}" alt="Location"><span>${data.address}</span></div>` : ''}
-                        <p style="font-size: 12px; margin-top: 15px;">© 2024 My Daraz. All Rights Reserved.</p>
+                        <p style="font-size: 12px; margin-top: 15px;">© 2026 My Daraz. All Rights Reserved.</p>
                     `; 
                 }
                 footer.innerHTML = footerHtml;
@@ -669,72 +847,52 @@
 
         function loadOrderHistory() { 
             if (!currentUser) return; 
-            db.collection('orders').where('userId', '==', currentUser.uid).orderBy('orderDate', 'desc').onSnapshot(snapshot => { 
+            db.collection('orders')
+              .where('userId', '==', currentUser.uid)
+              .orderBy('orderDate', 'desc')
+              .onSnapshot(snapshot => { 
                 const list = document.getElementById('order-history-list'); 
-                if (snapshot.empty) { list.innerHTML = "<p style='text-align:center;'>আপনার কোনো অর্ডার নেই।</p>"; return; } 
+                if (snapshot.empty) { 
+                    list.innerHTML = "<p style='text-align:center;'>আপনার কোনো অর্ডার নেই।</p>"; 
+                    return; 
+                } 
                 list.innerHTML = snapshot.docs.map(doc => { 
                     const order = doc.data(); 
-                    const orderDate = order.orderDate ? new Date(order.orderDate.seconds * 1000).toLocaleDateString('bn-BD') : 'N/A'; 
-                    return `<div class="list-item"><h4>${order.productName}</h4><p>অর্ডারের তারিখ: ${orderDate}</p><p class="status">স্ট্যাটাস: ${order.status}</p></div>`; 
+                    let orderDate = 'তারিখ উপলব্ধ নেই';
+                    if (order.orderDate && order.orderDate.seconds) {
+                        orderDate = new Date(order.orderDate.seconds * 1000).toLocaleString('bn-BD', {
+                            dateStyle: 'medium',
+                            timeStyle: 'short'
+                        });
+                    }
+                    return `
+                        <div class="list-item">
+                            <h4>${order.productName || 'প্রোডাক্ট'}</h4>
+                            <p><strong>অর্ডার আইডি:</strong> ${doc.id}</p>
+                            <p><strong>তারিখ ও সময়:</strong> ${orderDate}</p>
+                            <p class="status">স্ট্যাটাস: ${order.status || 'Pending'}</p>
+                        </div>
+                    `; 
                 }).join(''); 
+            }, error => {
+                db.collection('orders').where('userId', '==', currentUser.uid).get().then(snapshot => {
+                    const list = document.getElementById('order-history-list');
+                    if(snapshot.empty) {
+                        list.innerHTML = "<p style='text-align:center;'>আপনার কোনো অর্ডার নেই।</p>";
+                        return;
+                    }
+                    list.innerHTML = snapshot.docs.map(doc => {
+                        const order = doc.data();
+                        return `
+                            <div class="list-item">
+                                <h4>${order.productName || 'প্রোডাক্ট'}</h4>
+                                <p class="status">স্ট্যাটাস: ${order.status || 'Pending'}</p>
+                            </div>
+                        `;
+                    }).join('');
+                });
             }); 
         }
-        
-        document.addEventListener('DOMContentLoaded', async () => {
-            await loadSiteSettings();
-            await loadFooterData(); 
-            const bannerSwiper = new Swiper('#banner-slider', { loop: true, autoplay: { delay: 3000 }, pagination: { el: '.swiper-pagination', clickable: true } });
-            try {
-                const settingsDoc = await db.collection('settings').doc('siteInfo').get();
-                if (settingsDoc.exists) {
-                    const settings = settingsDoc.data();
-                    const bannerUrls = settings.bannerUrl || []; 
-                    document.getElementById('banner-wrapper').innerHTML = bannerUrls.map(url => `<div class="swiper-slide"><img src="${url.trim()}" alt="Banner"></div>`).join('');
-                    bannerSwiper.update();
-                }
-                const categories = (await db.collection('categories').orderBy('name').get()).docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                allProducts = (await db.collection('products').get()).docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-                const sideMenuLinks = document.querySelector('.side-menu-links');
-                if (categories.length > 0) {
-                    const divider = document.createElement('div');
-                    divider.className = 'category-divider';
-                    sideMenuLinks.appendChild(divider);
-                    categories.forEach(cat => {
-                        const link = document.createElement('a');
-                        link.href = `javascript:void(0);`;
-                        link.innerText = cat.name;
-                        link.onclick = () => showCategoryPage(cat.name);
-                        sideMenuLinks.appendChild(link);
-                    });
-                }
-
-                document.getElementById('categories-grid').innerHTML = categories.map(c => `<div class="category-card"><img src="${c.imageUrl}"><span>${c.name}</span></div>`).join('');
-                
-                let productHtml = '';
-                categories.forEach(cat => {
-                    const catProducts = allProducts.filter(p => p.category === cat.name);
-                    if (catProducts.length > 0) {
-                        productHtml += `<div class="section"><div class="section-header"><h2>${cat.name}</h2></div><div class="products-grid">`;
-                        productHtml += catProducts.map(p => {
-                            const hasLink = p.link && p.link.trim() !== '' && p.link.startsWith('http');
-                            const productDataString = JSON.stringify(p).replace(/'/g, "\\'");
-                            if (hasLink) {
-                                return `<a href="${p.link}" target="_blank" class="product-card-link">${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}<img src="${p.imageUrl}"><div class="product-info"><h3>${p.name}</h3><p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p><div class="btn-div">অর্ডার করুন</div></div></a>`;
-                            } else {
-                                return `<div class="product-card">${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}<img src="${p.imageUrl}"><div class="product-info"><h3>${p.name}</h3><p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p><button class="btn" onclick='toggleOrderModal(true, ${productDataString})'>অর্ডার করুন</button></div></div>`;
-                            }
-                        }).join('');
-                        productHtml += `</div></div>`;
-                    }
-                });
-                document.getElementById('product-sections-container').innerHTML = productHtml;
-            } catch (error) { console.error("Error loading initial data:", error); }
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                if (splash) { splash.style.opacity = '0'; setTimeout(() => splash.style.display = 'none', 500); }
-            }, 2000);
-        });
 
         function showCategoryPage(categoryName) {
             showPage('categoryProductsPage');
@@ -746,7 +904,7 @@
                 const hasLink = p.link && p.link.trim() !== '' && p.link.startsWith('http');
                 const productDataString = JSON.stringify(p).replace(/'/g, "\\'");
                 if (hasLink) {
-                    return `<a href="${p.link}" target="_blank" class="product-card-link">${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}<img src="${p.imageUrl}"><div class="product-info"><h3>${p.name}</h3><p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p><div class="btn-div">অর্ডার করুন</div></div></a>`;
+                    return `<a href="${p.link}" target="_blank" class="product-card-link">${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}<img src="${p.imageUrl}"><div class="product-info"><h3>${p.name}</h3><p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p><div class="btn-div">অর্ডার করার লিংক</div></div></a>`;
                 } else {
                     return `<div class="product-card">${p.discount ? `<div class="discount-badge">${p.discount}% OFF</div>` : ''}<img src="${p.imageUrl}"><div class="product-info"><h3>${p.name}</h3><p><span class="price">৳ ${p.price}</span> ${p.oldPrice ? `<span class="old-price">৳ ${p.oldPrice}</span>` : ''}</p><button class="btn" onclick='toggleOrderModal(true, ${productDataString})'>অর্ডার করুন</button></div></div>`;
                 }
