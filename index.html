@@ -546,10 +546,6 @@
             isAppDataLoaded = true;
             await loadSiteSettings();
             await loadFooterData();
-            
-            if (!bannerSwiper) {
-                bannerSwiper = new Swiper('#banner-slider', { loop: true, autoplay: { delay: 3000 }, pagination: { el: '.swiper-pagination', clickable: true } });
-            }
 
             try {
                 const settingsDoc = await db.collection('settings').doc('siteInfo').get();
@@ -557,7 +553,15 @@
                     const settings = settingsDoc.data();
                     const bannerUrls = settings.bannerUrl || []; 
                     document.getElementById('banner-wrapper').innerHTML = bannerUrls.map(url => `<div class="swiper-slide"><img src="${url.trim()}" alt="Banner"></div>`).join('');
-                    if(bannerSwiper) bannerSwiper.update();
+                    }
+                if (!bannerSwiper) {
+                    bannerSwiper = new Swiper('#banner-slider', {
+                        loop: true,
+                        autoplay: { delay: 3000 },
+                        pagination: { el: '.swiper-pagination', clickable: true }
+                    });
+                } else {
+                    bannerSwiper.update();
                 }
                 const categories = (await db.collection('categories').orderBy('name').get()).docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 allProducts = (await db.collection('products').get()).docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -602,11 +606,18 @@
                 document.getElementById('product-sections-container').innerHTML = productHtml;
             } catch (error) { console.error("Error loading initial data:", error); }
 
+        }
+
+        // Hide the splash screen for both signed-in and signed-out visitors.
+        window.addEventListener('load', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
-                if (splash) { splash.style.opacity = '0'; setTimeout(() => splash.style.display = 'none', 500); }
-            }, 1000);
-        }
+                if (splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => { splash.style.display = 'none'; }, 500);
+                }
+            }, 700);
+        });
 
         auth.onAuthStateChanged(user => { 
             currentUser = user; 
